@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚗</text></svg>" />
+	<title>MapDrive – 3D driving on real cities</title>
+</head>
+<body>
+	<div id="app"></div>
+
+	<div id="hud" hidden>
+		<div id="topbar">
+			<form id="search" autocomplete="off">
+				<input id="search-input" type="search" placeholder="Search any place… (Enter)" />
+				<button type="submit">Go</button>
+				<button type="button" id="settings-btn" title="Settings">⚙</button>
+			</form>
+			<ul id="search-results" hidden></ul>
+		</div>
+
+		<div id="location">
+			<div id="place">—</div>
+			<div id="coords"></div>
+		</div>
+
+		<div id="minimap"></div>
+
+		<div id="speedo">
+			<div id="speed">0</div>
+			<div class="unit">km/h</div>
+			<div id="gear">N</div>
+			<div id="flags"></div>
+		</div>
+
+		<div id="help">
+			<b>W / ↑</b> gas &nbsp; <b>S / ↓</b> brake · reverse<br />
+			<b>A D / ← →</b> steer &nbsp; <b>Space</b> handbrake (drift)<br />
+			<b>Shift</b> boost &nbsp; <b>C</b> camera &nbsp; <b>R</b> reset to road<br />
+			<b>G</b> ghost (drive through walls) &nbsp; <b>P</b> paint<br />
+			<b>M</b> mute &nbsp; <b>H</b> hide help &nbsp; drag mouse to look around<br />
+			click the minimap to teleport · gamepad supported
+		</div>
+
+		<div id="toast" hidden></div>
+		<div id="attribution"></div>
+	</div>
+
+	<div id="loading" hidden>
+		<div class="loading-card">
+			<div id="loading-title">Loading 3D city…</div>
+			<div class="bar"><div id="loading-bar"></div></div>
+			<div id="loading-sub"></div>
+		</div>
+	</div>
+
+	<div id="setup">
+		<form id="setup-form" class="card">
+			<h1>MapDrive</h1>
+			<p class="lead">Drive a car through real cities: free <b>OpenStreetMap</b> 3D buildings, or <b>Google Photorealistic 3D Tiles</b> with a key.</p>
+
+			<fieldset class="providers">
+				<label><input type="radio" name="provider" value="osm" /> OpenStreetMap <small>free · no key</small></label>
+				<label><input type="radio" name="provider" value="ion" /> Cesium ion <small>free token</small></label>
+				<label><input type="radio" name="provider" value="google" /> Google <small>API key</small></label>
+			</fieldset>
+
+			<p class="field note" data-provider="osm">
+				<small>No sign-up needed. Buildings come from OpenStreetMap with their real mapped heights. They're plain shaded blocks, not photos. Big cities (Makati, BGC, New York, Tokyo) have the most detail. Areas with little mapping look mostly flat.</small>
+			</p>
+
+			<label class="field" data-provider="google">
+				<span>Google Maps Platform API key <small>(Map Tiles API enabled)</small></span>
+				<input id="google-key" data-setting="googleKey" type="password" placeholder="AIza…" spellcheck="false" />
+				<small><a href="https://developers.google.com/maps/documentation/tile/get-api-key" target="_blank" rel="noopener">How to get a key</a> · needs a billing account, has a monthly free tier</small>
+			</label>
+
+			<label class="field" data-provider="ion">
+				<span>Cesium ion access token</span>
+				<input id="ion-token" data-setting="ionToken" type="password" placeholder="eyJhbGciOi…" spellcheck="false" />
+				<small><a href="https://ion.cesium.com/signup" target="_blank" rel="noopener">Free account</a> · add “Google Photorealistic 3D Tiles” from the Asset Depot</small>
+			</label>
+
+			<div class="row">
+				<label class="field">
+					<span>Start location</span>
+					<select id="preset" data-setting="preset"></select>
+				</label>
+				<label class="field" data-provider="google ion">
+					<span>Quality</span>
+					<select id="quality" data-setting="quality">
+						<option value="low">Low (fast)</option>
+						<option value="medium">Medium</option>
+						<option value="high">High (sharp, heavy)</option>
+					</select>
+				</label>
+			</div>
+
+			<p id="setup-error" hidden></p>
+
+			<button type="submit" class="primary">Start driving</button>
+			<p class="fine">Keys are kept only in this browser (localStorage). Restrict your key to your domain in the console.</p>
+		</form>
+	</div>
+
+	<script type="module" src="/src/main.js"></script>
+</body>
+</html>
